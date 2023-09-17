@@ -59,9 +59,21 @@ It is not needed in local development ⚠️
   - Runs on port 27017
 - **`akis-proxy`** (only in prod ⚠️)
   - Proxy layer between `demos.sabanciuniv.edu` and host instance.
+  - Utilizes [node-http-proxy](https://www.npmjs.com/package/node-http-proxy) library
   - Receives requests from `demos.sabanciuniv.edu`
   - Forwards requests to host instance's `3001 `(react) and `5001 `(nodejs) ports
   - Runs on port 3000 (prod)
+  - Why do we need such proxying?
+    - All the docker containers are designed to communicate each other using internal docker network.
+    - `akis-react-app` is the frontend service, it will store session cookies on the browser
+    - `akis-nodejs-api` is the backend service which stores session, i.e. it is cookie-setter of the frontend
+    - And there is a reverse-proxy set in `demos.sabanciuniv.edu`'s machine which forwards HTTPS(443) requests to `vpa-com16`'s 3000 port.
+    - But by its nature, backend service is designed to set cookies in client
+    - So, because of this reverse-proxying of `demos.sabanciuniv.edu`, the client should be demos.sabanciuniv.edu
+    - And `akis-proxy` service will handle this request forwarding among `react `and `nodejs `.
+    - So that backend will assume that incoming request is actually coming from `demos` even though it is designed to receive requests from vpa-com16's 3000 port. Then it will set cookies in `demos` successfully ✅ .
+    - If we didn't have this `akis-proxy` service, users who visit demos wouldn't be able to sign-in even though their credentials were true. This is because of [cross-origin cookies](https://medium.com/@sharadokey/understanding-cors-and-cross-origin-cookies-bf36d624da78).
+    - Also one more benefit of `akis-proxy` is it hides other `vpa-com16'`s services/containers from `demos`. `demos` will only know about `vpa-com16`'s 3000 port and it won't talk to any other services/containers of `vpa-com16`.
 
 ### Volume definitions
 
