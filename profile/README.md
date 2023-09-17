@@ -146,4 +146,51 @@ Ensure that you have the followings installed before you attempt to run the proj
 
 ## Steps
 
-1. Create a folder akis-project somewhere in your disk.
+1. Create a folder named `akis-project` somewhere in your disk.
+2. Clone repositories from github
+   - [akis-react-app](https://github.com/akis-project/akis-react-app)
+   - [akis-nodejs-api](https://github.com/akis-project/akis-nodejs-api)
+   - [akis-flask-api](https://github.com/akis-project/akis-flask-api)
+   - [docker-compose](https://github.com/akis-project/docker-compose)
+3. Switch to respective branches of each repository:
+
+```sh
+# akis-react-app
+git switch dev
+
+# akis-nodejs-api
+git switch dev
+
+# akis-flask-api
+git switch dev
+
+# docker-compose
+# stay in 'main'
+```
+
+4. Create volumes in project directory (you must be in akis-project folder, at the root)
+
+```sh
+mkdir volumes
+cd volumes
+mkdir db
+mkdir uploads
+```
+
+After this step, make sure you have the following folder structure:
+![image](https://github.com/akis-project/.github/assets/68128434/7dff8b3f-41d1-42f7-8df6-52f644557494)
+
+5. Change environment variables & run the docker compose
+
+```sh
+mv .env.dev .env
+mv docker-compose.dev.yml docker-compose.yml
+
+# To see logs:
+docker compose up
+
+# To run in detached mode:
+# docker compose up -d
+```
+
+From now on, docker containers will be running on the background, with volumes and networks managed by itself automatically.
