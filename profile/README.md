@@ -170,6 +170,10 @@ git switch dev
 
 4. Create volumes in project directory (you must be in akis-project folder, at the root)
 
+> ⚠️Because we are binding local volumes to docker containers, we need to create those volumes manually in the host machine
+> ⚠️This part is a MUST!
+> ⚠️Otherwise you won't be able to run `docker compose up`
+
 ```sh
 mkdir volumes
 cd volumes
@@ -180,7 +184,7 @@ mkdir uploads
 After this step, make sure you have the following folder structure:
 ![image](https://github.com/akis-project/.github/assets/68128434/7dff8b3f-41d1-42f7-8df6-52f644557494)
 
-5. Change environment variables & run the docker compose
+6. Change environment variables & run the docker compose
 
 ```sh
 mv .env.dev .env
@@ -193,4 +197,8 @@ docker compose up
 # docker compose up -d
 ```
 
-From now on, docker containers will be running on the background, with volumes and networks managed by itself automatically.
+### Conclusion
+
+- From now on, docker containers will be running on the background, with volumes and networks managed by itself automatically.
+- `React` and `nodejs` containers will be running in development mode, i.e. whenever you make changes in the code, they will hot reload. You will be able to see the latest changes without restarting containers 👍
+- **However, `flask` will need to be restarted again when its code is updated** 🛑
